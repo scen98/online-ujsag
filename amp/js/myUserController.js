@@ -1,0 +1,41 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+import { Author, logOut, updatePassword } from "./objects/author.js";
+import * as doc from "./doc.js";
+import * as utils from "./utils.js";
+init();
+function init() {
+    doc.addClick("logout-btn", logOut);
+    doc.addClick("change-pw", changePassword);
+}
+function changePassword() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let response = yield updatePassword(new Author(parseInt(utils.getUrlParameter("szerzo")), null, null), doc.getValue("new-pw-1"), doc.getValue("new-pw-2"), doc.getValue("my-pw"));
+        if (response === "200") {
+            doc.setText("pw-message", "A jelszó sikeresen meg lett változtatva.");
+        }
+        else if (response === "403") {
+            doc.setText("pw-message", "Hozzáférés megtagadva. Biztosan helyes jelszót adtál meg?");
+        }
+        else if (response == null) {
+            doc.setText("pw-message", "A két jelszó nem egyezik meg");
+        }
+        else {
+            doc.setText("pw-message", "A művelet végrehajtása szerver oldali hiba miatt sikertelen.");
+        }
+        resetPwInputs();
+    });
+}
+function resetPwInputs() {
+    doc.setValue("new-pw-1", "");
+    doc.setValue("new-pw-2", "");
+    doc.setValue("my-pw", "");
+}
+//# sourceMappingURL=myUserController.js.map
